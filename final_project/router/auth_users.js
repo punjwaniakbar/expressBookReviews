@@ -53,9 +53,42 @@ regd_users.post("/login", (req, res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
-});
+  // Extract email parameter from request URL
+    const isbn = req.params.isbn;
+    let book = books[isbn];  // Retrieve book object associated with isbn
+    if (book) {  // Check if book exists
+        let username = req.session.authorization.username;
 
+        if (req.body.review) {
+            book.reviews[username] = req.body.review;
+        }
+
+        books[isbn] = book;  // Update friend details in 'friends' object
+        res.send(`Review posted to Book with the ISBN ${isbn}.`);
+    } else {
+        // Respond if book with specified ISBN is not found
+        res.send("Unable to find book!");
+    }
+});
+// Add a book review
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    //Write your code here
+    const isbn = req.params.isbn;
+    let book = books[isbn];  // Retrieve book object associated with isbn
+    if (book) {  // Check if book exists
+        let username = req.session.authorization.username;
+
+        if (book.reviews[username]) {
+            book.reviews[username]="";
+        }
+
+        books[isbn] = book;  // Update friend details in 'friends' object
+        res.send(`Review deleted for Book with the ISBN ${isbn}.`);
+    } else {
+        // Respond if book with specified ISBN is not found
+        res.send("Unable to find book!");
+    }
+});
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
