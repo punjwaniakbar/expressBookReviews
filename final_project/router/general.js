@@ -107,6 +107,7 @@ public_users.get('/isbn/:isbn', function (req, res) {
 //         }, {});
 //     res.send(JSON.stringify(matchingBooks,null,4));
 // });
+/************** USING AXIOS ASYNC AWAIT *******************/
 public_users.get('/author/:author', async function (req, res) {
     try {
         const author = req.params.author;
